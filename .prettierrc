@@ -10,16 +10,12 @@
     "^@app/(.*)$",
     "^@assets",
     "^@assets/(.*)$",
-    "^@guards",
-    "^@guards/(.*)$",
-    "^@store",
-    "^@store/(.*)$",
-    "^@http",
-    "^@http/(.*)$",
-    "^@shared",
-    "^@shared/(.*)$",
-    "^@features",
-    "^@features/(.*)$",
+    "^@common",
+    "^@common/(.*)$",
+    "^@modules",
+    "^@modules/(.*)$",
+    "^@modules",
+    "^@modules/(.*)$",
     "^[./]"
   ]
 }
