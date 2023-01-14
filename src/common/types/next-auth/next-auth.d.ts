@@ -8,7 +8,7 @@ declare module 'next-auth/jwt' {
    * [`jwt` callback](https://next-auth.js.org/configuration/callbacks#jwt-callback) | [`getToken`](https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken)
    */
   export interface JWT extends Record<string, unknown>, DefaultJWT {
-    jwt?: string;
+    accessToken?: string;
     id?: string;
   }
 }
@@ -25,7 +25,7 @@ declare module 'next-auth' {
    * [`profile` OAuth provider callback](https://next-auth.js.org/configuration/providers#using-a-custom-provider)
    */
   export interface User extends DefaultUser {
-    jwt: string;
+    accessToken: string;
   }
 
   // interface AAuthOptions extends OriginalAuthOptions {

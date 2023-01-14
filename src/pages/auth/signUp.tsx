@@ -1,9 +1,7 @@
 import {
   Box,
   Button,
-  Checkbox,
   Container,
-  Divider,
   FormControl,
   FormLabel,
   Heading,
@@ -13,62 +11,51 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
-  useDisclosure,
 } from '@chakra-ui/react';
+import { AxiosError } from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 import AppLogo from '@/common/components/AppLogo';
 import { AppRoute } from '@/common/enums/appRoute';
 import { useAppToast } from '@/common/hooks';
+import { ApiUrl, httpClient } from '@/common/http';
 import httpStatusMessage from '@/common/json/httpStatusMessage.json';
-import { OAuthButtonGroup, PasswordField } from '@/modules/auth';
+import { PasswordField } from '@/modules/auth';
 
 type HttpStatusMessage = typeof httpStatusMessage;
+
 const SignIn: React.FunctionComponent = () => {
   const router = useRouter();
   const toast = useAppToast();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const { register, handleSubmit, getValues } = useForm({
     defaultValues: {
       email: '',
       password: '',
+      username: '',
     },
   });
 
-  const toastByStatusCode = (status: string) => {
-    if (status.toString()[0] === '2') {
+  const handleCreate = async () => {
+    const formValue = getValues();
+    try {
+      await httpClient.post(ApiUrl.AUTH_LOCAL_REGISTER, formValue);
       toast({
         status: 'success',
         title: 'Success',
-        description: httpStatusMessage[status as keyof HttpStatusMessage],
+        description: 'Created successfully',
       });
+      router.push(AppRoute.AUTH_SIGN_IN);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast({
+          status: 'error',
+          title: 'Error',
+          description: httpStatusMessage[error.code as keyof HttpStatusMessage],
+        });
+      }
     }
-
-    if (status.toString()[0] === '4') {
-      toast({
-        status: 'error',
-        title: 'Error',
-        description: httpStatusMessage[status as keyof HttpStatusMessage],
-      });
-    }
-  };
-
-  const handleSave = async () => {
-    const formValue = getValues();
-    onOpen();
-    const response = await signIn('credentials', {
-      redirect: false,
-      email: formValue.email,
-      password: formValue.password,
-      callbackUrl: '/',
-    });
-    onClose();
-
-    toastByStatusCode(response?.status.toString() ?? '');
-    if (response?.ok) router.push('/');
   };
 
   return (
@@ -78,12 +65,15 @@ const SignIn: React.FunctionComponent = () => {
           <Stack spacing="6" alignItems="center">
             <AppLogo />
             <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
-              <Heading size={useBreakpointValue({ base: 'xs', md: 'sm', lg: 'lg' })}>Log in to your account</Heading>
+              <Heading size={useBreakpointValue({ base: 'xs', md: 'sm', lg: 'lg' })}>Create Your Account</Heading>
               <HStack spacing="1" justify="center">
-                <Text color="muted">Don't have an account?</Text>
-                <Button variant="link" as={Link} href={AppRoute.AUTH_SIGN_UP} colorScheme="blue">
-                  Sign up
-                </Button>
+                <Text color="muted">
+                  If you have a account. Please click{' '}
+                  <Button variant="link" as={Link} href={AppRoute.AUTH_SIGN_IN} colorScheme="blue">
+                    sign in
+                  </Button>
+                  .
+                </Text>
               </HStack>
             </Stack>
           </Stack>
@@ -94,34 +84,25 @@ const SignIn: React.FunctionComponent = () => {
             boxShadow={{ base: 'none', sm: useColorModeValue('md', 'md-dark') }}
             borderRadius={{ base: 'none', sm: 'xl' }}
           >
-            <form onSubmit={handleSubmit(handleSave)}>
+            <form onSubmit={handleSubmit(handleCreate)}>
               <Stack spacing="6">
                 <Stack spacing="5">
-                  <FormControl>
+                  <FormControl isRequired>
                     <FormLabel htmlFor="email">Email</FormLabel>
                     <Input {...register('email')} id="email" type="email" />
                   </FormControl>
-                  <PasswordField {...register('password')} />
+                  <FormControl isRequired>
+                    <FormLabel htmlFor="username">Username</FormLabel>
+                    <Input {...register('username')} id="username" />
+                  </FormControl>
+                  <PasswordField isRequired {...register('password')} />
                 </Stack>
-                <HStack justify="space-between">
-                  <Checkbox>Remember me</Checkbox>
-                  <Button variant="link" as={Link} href={AppRoute.AUTH_FORGOT_PASSWORD} size="sm">
-                    Forgot password?
-                  </Button>
-                </HStack>
+
                 <Stack spacing="6">
-                  <Button type="submit" variant="solid" colorScheme="blue" isLoading={isOpen}>
-                    Sign in
+                  <Button type="submit" variant="solid" colorScheme="blue">
+                    Create your account
                   </Button>
                 </Stack>
-                <HStack>
-                  <Divider />
-                  <Text fontSize="sm" whiteSpace="nowrap" color="muted">
-                    or continue with
-                  </Text>
-                  <Divider />
-                </HStack>
-                <OAuthButtonGroup />
               </Stack>
             </form>
           </Box>

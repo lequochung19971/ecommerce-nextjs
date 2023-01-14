@@ -1,16 +1,15 @@
-import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
-import { ComponentProps, FormEvent } from 'react';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
+import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/react';
 
-const Login: React.FunctionComponent = () => {
+const Home: React.FunctionComponent = () => {
   const session = useSession();
-  console.log(session);
 
   return (
     <Flex w="100%" h="100vh" bg="pink.600" alignItems="center" justifyContent="center">
       <Box p="4" borderRadius="4" bg="white">
-        {!session.data ? (
-          <Button onClick={() => signIn()} variant="solid" color="white" backgroundColor="black" fontWeight="bold">
+        {session.data == null ? (
+          <Button as={Link} href="auth/signIn" variant="solid" color="white" backgroundColor="black" fontWeight="bold">
             Login
           </Button>
         ) : (
@@ -22,4 +21,4 @@ const Login: React.FunctionComponent = () => {
     </Flex>
   );
 };
-export default Login;
+export default Home;

@@ -1,20 +1,23 @@
-import NextAuth, { AuthOptions } from 'next-auth';
-import axios from 'axios';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import type { AuthOptions } from 'next-auth';
+import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { UserLoginResponse } from '@/modules/auth';
+
+import { ApiUrl, httpClient } from '@/common/http';
+import type { UserLoginResponse } from '@/modules/auth';
 
 const options: AuthOptions = {
   providers: [
     Credentials({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'text', placeholder: 'test@test.com' },
+        email: { label: 'Email', type: 'text', placeholder: 'test@mail.com' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
+        // eslint-disable-next-line no-useless-catch
         try {
-          const { data } = await axios.post<UserLoginResponse>(`${process.env.NEXT_PUBLIC_API_URL}/auth/local`, {
+          const { data } = await httpClient.post<UserLoginResponse>(ApiUrl.AUTH_LOCAL, {
             identifier: credentials?.email,
             password: credentials?.password,
           });
@@ -22,8 +25,9 @@ const options: AuthOptions = {
             id: data.user.id,
             email: data.user.email,
             name: data.user.username,
-            jwt: data.jwt,
+            accessToken: data.jwt,
           };
+          // eslint-disable-next-line no-useless-catch
         } catch (e) {
           throw e;
           // console.log('caught error');
@@ -35,23 +39,24 @@ const options: AuthOptions = {
     }),
   ],
   pages: {
-    // signIn: '/auth/signin',
-    // signOut: '/auth/signout',
+    signIn: '/auth/signIn',
+    // signOut: '/auth/signOut',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
-    // newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
+    newUser: '/auth/signUp', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   callbacks: {
     // Getting the JWT token from API response
     jwt: async ({ token, user }) => {
-      const isSignIn = user ? true : false;
+      const isSignIn = !!user;
+      const updatedToken = token;
       if (isSignIn) {
-        token.jwt = user?.jwt;
-        token.id = user?.id;
-        token.name = user?.name;
-        token.email = user?.email;
+        updatedToken.accessToken = user?.accessToken;
+        updatedToken.id = user?.id;
+        updatedToken.name = user?.name;
+        updatedToken.email = user?.email;
       }
-      return Promise.resolve(token);
+      return Promise.resolve(updatedToken);
     },
 
     // session: async ({ session, user }) => {
@@ -62,5 +67,6 @@ const options: AuthOptions = {
   },
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
+const nextAuth = (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);
+export default nextAuth;
 // export default NextAuth(options);
