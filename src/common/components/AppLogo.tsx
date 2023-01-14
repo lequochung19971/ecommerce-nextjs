@@ -7,8 +7,9 @@ export const AppLogo: React.FunctionComponent = () => {
       alignItems="center"
       width="200px"
       height="60px"
+      fontWeight="bold"
       fontSize="3xl"
-      border="1px solid gray"
+      border="3px solid black"
     >
       LOGO
     </Flex>
