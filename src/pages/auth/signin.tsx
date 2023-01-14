@@ -79,12 +79,6 @@ const SignIn: React.FunctionComponent = () => {
             <AppLogo />
             <Stack spacing={{ base: '2', md: '3' }} textAlign="center">
               <Heading size={useBreakpointValue({ base: 'xs', md: 'sm', lg: 'lg' })}>Log in to your account</Heading>
-              <HStack spacing="1" justify="center">
-                <Text color="muted">Don't have an account?</Text>
-                <Button variant="link" as={Link} href={AppRoute.AUTH_SIGN_UP} colorScheme="blue">
-                  Sign up
-                </Button>
-              </HStack>
             </Stack>
           </Stack>
           <Box
@@ -125,6 +119,14 @@ const SignIn: React.FunctionComponent = () => {
               </Stack>
             </form>
           </Box>
+          <HStack spacing="1" justify="center">
+            <Text color="muted">
+              Don't have an account?{' '}
+              <Button variant="link" as={Link} href={AppRoute.AUTH_SIGN_UP} colorScheme="blue">
+                Sign up
+              </Button>
+            </Text>
+          </HStack>
         </Stack>
       </Container>
     </Box>
