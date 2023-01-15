@@ -2,12 +2,18 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { AuthOptions } from 'next-auth';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
 
 import { ApiUrl, httpClient } from '@/common/http';
 import type { UserLoginResponse } from '@/modules/auth';
+import { AuthProvider } from '@/modules/auth/enums';
 
 const options: AuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID ?? '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? '',
+    }),
     Credentials({
       name: 'Credentials',
       credentials: {
@@ -39,22 +45,40 @@ const options: AuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/auth/signIn',
+    // signIn: '/auth/signIn',
     // signOut: '/auth/signOut',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: '/auth/signUp', // New users will be directed here on first sign in (leave the property out if not of interest)
+    // newUser: '/auth/signUp', // New users will be directed here on first sign in (leave the property out if not of interest)
   },
   callbacks: {
     // Getting the JWT token from API response
-    jwt: async ({ token, user }) => {
+    jwt: async (response) => {
+      const { token, user, account } = response;
       const isSignIn = !!user;
       const updatedToken = token;
       if (isSignIn) {
-        updatedToken.accessToken = user?.accessToken;
-        updatedToken.id = user?.id;
-        updatedToken.name = user?.name;
-        updatedToken.email = user?.email;
+        switch (account?.provider) {
+          case AuthProvider.GOOGLE: {
+            const { data } = await httpClient.get<UserLoginResponse>(
+              `${ApiUrl.AUTH_GOOGLE_CALLBACK}?access_token=${account?.access_token}`,
+            );
+            updatedToken.accessToken = data.jwt;
+            updatedToken.id = data.user?.id;
+            updatedToken.name = data.user?.username;
+            updatedToken.email = data.user?.email;
+            break;
+          }
+
+          default: {
+            // CREDENTIALS
+            updatedToken.accessToken = user?.accessToken;
+            updatedToken.id = user?.id;
+            updatedToken.name = user?.name;
+            updatedToken.email = user?.email;
+            break;
+          }
+        }
       }
       return Promise.resolve(updatedToken);
     },

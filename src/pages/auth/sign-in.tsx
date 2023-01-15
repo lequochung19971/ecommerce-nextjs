@@ -56,7 +56,7 @@ const SignIn: React.FunctionComponent = () => {
     }
   };
 
-  const handleSave = async () => {
+  const doSubmit = async () => {
     const formValue = getValues();
     onOpen();
     const response = await signIn('credentials', {
@@ -70,6 +70,11 @@ const SignIn: React.FunctionComponent = () => {
     toastByStatusCode(response?.status.toString() ?? '');
     if (response?.ok) router.push('/');
   };
+
+  // Google Handler function
+  async function handleGoogleSignIn() {
+    signIn('google', { callbackUrl: window.location.origin });
+  }
 
   return (
     <Box maxWidth="100%" width="100%" height="100vh" bg="gray.200">
@@ -88,7 +93,7 @@ const SignIn: React.FunctionComponent = () => {
             boxShadow={{ base: 'none', sm: useColorModeValue('md', 'md-dark') }}
             borderRadius={{ base: 'none', sm: 'xl' }}
           >
-            <form onSubmit={handleSubmit(handleSave)}>
+            <form onSubmit={handleSubmit(doSubmit)}>
               <Stack spacing="6">
                 <Stack spacing="5">
                   <FormControl>
@@ -115,7 +120,7 @@ const SignIn: React.FunctionComponent = () => {
                   </Text>
                   <Divider />
                 </HStack>
-                <OAuthButtonGroup />
+                <OAuthButtonGroup onGoogleSignIn={handleGoogleSignIn} />
               </Stack>
             </form>
           </Box>

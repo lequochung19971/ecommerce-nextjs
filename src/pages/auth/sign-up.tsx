@@ -11,6 +11,7 @@ import {
   Text,
   useBreakpointValue,
   useColorModeValue,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import Link from 'next/link';
@@ -36,10 +37,12 @@ const SignIn: React.FunctionComponent = () => {
       username: '',
     },
   });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleCreate = async () => {
     const formValue = getValues();
     try {
+      onOpen();
       await httpClient.post(ApiUrl.AUTH_LOCAL_REGISTER, formValue);
       toast({
         status: 'success',
@@ -52,9 +55,11 @@ const SignIn: React.FunctionComponent = () => {
         toast({
           status: 'error',
           title: 'Error',
-          description: httpStatusMessage[error.code as keyof HttpStatusMessage],
+          description: httpStatusMessage[error.response?.status.toString() as keyof HttpStatusMessage],
         });
       }
+    } finally {
+      onClose();
     }
   };
 
@@ -99,7 +104,7 @@ const SignIn: React.FunctionComponent = () => {
                 </Stack>
 
                 <Stack spacing="6">
-                  <Button type="submit" variant="solid" colorScheme="blue">
+                  <Button type="submit" variant="solid" colorScheme="blue" isLoading={isOpen}>
                     Create your account
                   </Button>
                 </Stack>

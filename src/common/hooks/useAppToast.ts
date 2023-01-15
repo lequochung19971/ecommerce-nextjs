@@ -5,4 +5,5 @@ export const useAppToast = (defaultOptions = {} as UseToastOptions) =>
   useToast({
     ...defaultOptions,
     position: 'bottom-left',
+    isClosable: true,
   });

@@ -9,7 +9,7 @@ const Home: React.FunctionComponent = () => {
     <Flex w="100%" h="100vh" bg="pink.600" alignItems="center" justifyContent="center">
       <Box p="4" borderRadius="4" bg="white">
         {session.data == null ? (
-          <Button as={Link} href="auth/signIn" variant="solid" color="white" backgroundColor="black" fontWeight="bold">
+          <Button as={Link} href="auth/sign-in" variant="solid" color="white" backgroundColor="black" fontWeight="bold">
             Login
           </Button>
         ) : (

@@ -1,7 +1,7 @@
 export enum AppRoute {
   HOME = '/',
-  AUTH_SIGN_IN = '/auth/signIn',
-  AUTH_SIGN_UP = '/auth/signUp',
-  AUTH_FORGOT_PASSWORD = '/auth/forgotPassword',
-  AUTH_RESET_PASSWORD = '/auth/resetPassword',
+  AUTH_SIGN_IN = '/auth/sign-in',
+  AUTH_SIGN_UP = '/auth/sign-up',
+  AUTH_FORGOT_PASSWORD = '/auth/forgot-password',
+  AUTH_RESET_PASSWORD = '/auth/reset-password',
 }
