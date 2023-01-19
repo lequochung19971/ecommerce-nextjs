@@ -1,8 +1,9 @@
 import { Box, Button, Container, Flex, Text, useBreakpointValue, useColorModeValue } from '@chakra-ui/react';
+import type { NextPage } from 'next';
 
-const SignOut: React.FunctionComponent = (props) => {
+const SignOut: NextPage = (props) => {
   return (
-    <Box maxWidth="100%" width="100%" height="100vh" bg="gray.200">
+    <Box maxWidth="100%" width="100%" height="100%" bg="gray.200">
       <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
         <Flex
           minHeight="300px"

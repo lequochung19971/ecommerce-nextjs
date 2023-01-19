@@ -15,6 +15,7 @@ import {
   useColorModeValue,
   useDisclosure,
 } from '@chakra-ui/react';
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
@@ -22,12 +23,13 @@ import { useForm } from 'react-hook-form';
 
 import AppLogo from '@/common/components/AppLogo';
 import { AppRoute } from '@/common/enums/appRoute';
+import { withAuth } from '@/common/HOCs';
 import { useAppToast } from '@/common/hooks';
 import httpStatusMessage from '@/common/json/httpStatusMessage.json';
 import { OAuthButtonGroup, PasswordField } from '@/modules/auth';
 
 type HttpStatusMessage = typeof httpStatusMessage;
-const SignIn: React.FunctionComponent = () => {
+const SignIn: NextPage = () => {
   const router = useRouter();
   const toast = useAppToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -77,7 +79,7 @@ const SignIn: React.FunctionComponent = () => {
   }
 
   return (
-    <Box maxWidth="100%" width="100%" height="100vh" bg="gray.200">
+    <Box maxWidth="100%" width="100%" height="100%" bg="gray.200">
       <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
         <Stack spacing="8">
           <Stack spacing="6" alignItems="center">
@@ -138,4 +140,4 @@ const SignIn: React.FunctionComponent = () => {
   );
 };
 
-export default SignIn;
+export default withAuth(SignIn);

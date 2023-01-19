@@ -14,6 +14,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
+import type { NextPage } from 'next';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 
@@ -25,7 +26,7 @@ import httpStatusMessage from '@/common/json/httpStatusMessage.json';
 
 type HttpStatusMessage = typeof httpStatusMessage;
 
-const ForgotPassword = () => {
+const ForgotPassword: NextPage = () => {
   const toast = useAppToast();
   const { register, handleSubmit, getValues } = useForm({
     defaultValues: {
@@ -58,7 +59,7 @@ const ForgotPassword = () => {
   };
 
   return (
-    <Box maxWidth="100%" width="100%" height="100vh" bg="gray.200">
+    <Box maxWidth="100%" width="100%" height="100%" bg="gray.200">
       <Container maxW="lg" py={{ base: '12', md: '24' }} px={{ base: '0', sm: '8' }}>
         <Stack spacing="8">
           <Stack spacing="6" alignItems="center">

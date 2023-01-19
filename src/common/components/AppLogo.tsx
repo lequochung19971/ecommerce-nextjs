@@ -1,6 +1,7 @@
+import type { FlexProps } from '@chakra-ui/react';
 import { Flex } from '@chakra-ui/react';
 
-export const AppLogo: React.FunctionComponent = () => {
+export const AppLogo: React.FunctionComponent<FlexProps> = (props) => {
   return (
     <Flex
       justifyContent="center"
@@ -10,6 +11,7 @@ export const AppLogo: React.FunctionComponent = () => {
       fontWeight="bold"
       fontSize="3xl"
       border="3px solid black"
+      {...props}
     >
       LOGO
     </Flex>

@@ -1,24 +1,23 @@
-import { Box, Button, Flex } from '@chakra-ui/react';
-import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { Box } from '@chakra-ui/react';
+import type { GetServerSideProps } from 'next';
+
+import { withAuth } from '@/common/HOCs';
+import { Banner } from '@/modules/home/components';
+import { ProductCard } from '@/modules/products/components';
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  return {
+    props: {},
+  };
+};
 
 const Home: React.FunctionComponent = () => {
-  const session = useSession();
-
   return (
-    <Flex w="100%" h="100vh" bg="pink.600" alignItems="center" justifyContent="center">
-      <Box p="4" borderRadius="4" bg="white">
-        {session.data == null ? (
-          <Button as={Link} href="auth/sign-in" variant="solid" color="white" backgroundColor="black" fontWeight="bold">
-            Login
-          </Button>
-        ) : (
-          <Button onClick={() => signOut()} variant="solid" color="white" backgroundColor="black" fontWeight="bold">
-            Logout
-          </Button>
-        )}
-      </Box>
-    </Flex>
+    <Box w="100%" height="100%" bg="gray.200">
+      <Banner />
+      <ProductCard />
+    </Box>
   );
 };
-export default Home;
+
+export default withAuth(Home);

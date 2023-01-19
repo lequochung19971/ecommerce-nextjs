@@ -4,4 +4,5 @@ export enum AppRoute {
   AUTH_SIGN_UP = '/auth/sign-up',
   AUTH_FORGOT_PASSWORD = '/auth/forgot-password',
   AUTH_RESET_PASSWORD = '/auth/reset-password',
+  CONTACT = '/contact',
 }

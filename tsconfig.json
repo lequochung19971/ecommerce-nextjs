@@ -26,8 +26,8 @@
       "@/modules/*": [
         "src/modules/*"
       ],
-      "@/assets/*": [
-        "src/assets/*"
+      "@/layouts/*": [
+        "src/layouts/*"
       ],
       "@/pages/*": [
         "src/pages/*"
