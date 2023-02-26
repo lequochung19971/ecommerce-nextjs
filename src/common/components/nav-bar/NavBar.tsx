@@ -19,60 +19,69 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { signOut, useSession } from 'next-auth/react';
+import { useMemo } from 'react';
 import { FaBoxOpen, FaSignOutAlt, FaUserAlt } from 'react-icons/fa';
+import useSWR from 'swr';
 
 import { AppRoute } from '@/common/enums/appRoute';
+import { ApiUrl, httpMethods } from '@/common/http';
+import { httpFetcher } from '@/common/http/httpFetcher';
 import type { NavItem } from '@/common/types';
+import type { Category } from '@/modules/products/types';
 
 import AppLogo from '../AppLogo';
 import SearchField from '../SearchField';
-import ShoppingCard from '../ShoppingCart';
+import ShoppingCart from '../ShoppingCart';
 import DesktopNav from './DesktopNav';
 import { MobileNav } from './MobileNav';
 
-export const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: 'Home',
-    href: AppRoute.HOME,
-  },
-  {
-    label: 'Categories',
-    children: [
-      {
-        label: 'Category 1',
-        subLabel: 'Find your dream design job',
-        href: '#',
-      },
-      {
-        label: 'Category 2',
-        subLabel: 'An exclusive list for contract work',
-        href: '#',
-        children: [
-          {
-            label: 'Category 2 - 1',
-            subLabel: 'An exclusive list for contract work',
-            href: '#',
-          },
-          {
-            label: 'Category 2 - 2',
-            subLabel: 'An exclusive list for contract work',
-            href: '#',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: 'About',
-    href: '#',
-  },
-  {
-    label: 'Contact',
-    href: AppRoute.CONTACT,
-  },
-];
+function generateProductNavItemsFromCategories(categories: Category[]): NavItem[] {
+  return categories.map((category) => {
+    return {
+      label: category.name,
+      href: `${AppRoute.PRODUCTS}/${category.slug}`,
+      children: generateProductNavItemsFromCategories(category.childCategories ?? []),
+    } as NavItem;
+  });
+}
 
 export const NavBar: React.FunctionComponent = () => {
+  const { data } = useSWR(
+    httpMethods.get(ApiUrl.CATEGORIES, {
+      params: {
+        populate: {
+          0: 'childCategories',
+          1: 'childCategories.childCategories',
+        },
+      },
+    }),
+    httpFetcher<{
+      data: Category[];
+    }>(),
+  );
+
+  const navItems = useMemo(() => {
+    return [
+      {
+        label: 'Home',
+        href: AppRoute.HOME,
+      },
+      {
+        label: 'Products',
+        href: AppRoute.PRODUCTS,
+        children: generateProductNavItemsFromCategories(data?.data ?? []),
+      },
+      {
+        label: 'About',
+        href: '#',
+      },
+      {
+        label: 'Contact',
+        href: AppRoute.CONTACT,
+      },
+    ];
+  }, [data]);
+
   const { isOpen, onToggle } = useDisclosure();
   const session = useSession();
   const router = useRouter();
@@ -107,7 +116,7 @@ export const NavBar: React.FunctionComponent = () => {
             onClick={() => router.push(AppRoute.HOME)}
           />
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
-            <DesktopNav items={NAV_ITEMS} />
+            <DesktopNav items={navItems} />
           </Flex>
         </Flex>
         <Box mr="4" display={{ base: 'none', md: 'block' }}>
@@ -170,12 +179,12 @@ export const NavBar: React.FunctionComponent = () => {
               </Menu>
             </Flex>
           )}
-          <ShoppingCard />
+          <ShoppingCart />
         </Stack>
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav items={NAV_ITEMS} />
+        <MobileNav items={navItems} />
       </Collapse>
     </Box>
   );

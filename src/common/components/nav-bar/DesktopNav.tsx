@@ -35,7 +35,7 @@ const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
               </Text>
               <Text fontSize={'sm'}>{subLabel}</Text>
             </Box>
-            {!!children && (
+            {!!children?.length && (
               <Flex
                 transition={'all .3s ease'}
                 transform={'translateX(-5px)'}
@@ -51,7 +51,7 @@ const DesktopSubNav = ({ label, href, subLabel, children }: NavItem) => {
           </Stack>
         </Link>
       </PopoverTrigger>
-      {children && (
+      {!!children?.length && (
         <PopoverContent border={0} boxShadow={'xl'} bg={popoverContentBgColor} minW={'xs'} p="2">
           <Box>
             {children.map((child) => (
@@ -92,11 +92,11 @@ export const DesktopNav: React.FunctionComponent<DesktopNavProps> = ({ items }) 
                 }}
               >
                 {navItem.label}
-                {navItem.children?.length && <Icon w={5} h={5} as={ChevronDownIcon} transition="all .3s ease" />}
+                {!!navItem.children?.length && <Icon w={5} h={5} as={ChevronDownIcon} transition="all .3s ease" />}
               </Link>
             </PopoverTrigger>
 
-            {navItem.children && (
+            {!!navItem.children?.length && (
               <PopoverContent border={0} boxShadow={'xl'} bg={popoverContentBgColor} minW={'xs'} p="2">
                 <Box>
                   {navItem.children.map((child) => (

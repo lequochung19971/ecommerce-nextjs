@@ -1,9 +1,12 @@
-import { Box, Icon, Text } from '@chakra-ui/react';
+import { Box, Icon, IconButton, Text } from '@chakra-ui/react';
+import Link from 'next/link';
 import { FaShoppingCart } from 'react-icons/fa';
 
-export const ShoppingCard: React.FunctionComponent = () => {
+import { AppRoute } from '../enums';
+
+export const ShoppingCart: React.FunctionComponent = () => {
   return (
-    <Box h={5} w={5} cursor="pointer" role="group">
+    <Box cursor="pointer" role="group" as={Link} href={AppRoute.CHECKOUT_SHOPPING_CART}>
       <Text
         colorScheme="blue"
         sx={{
@@ -14,19 +17,20 @@ export const ShoppingCard: React.FunctionComponent = () => {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          width: '18px',
-          height: '18px',
+          width: 5,
+          height: 5,
           fontSize: '12px',
           fontWeight: 'bold',
-          top: '8px',
-          right: '4px',
+          top: '2px',
+          right: '6px',
+          zIndex: 2,
         }}
       >
         10
       </Text>
-      <Icon h={5} w={5} as={FaShoppingCart} />
+      <IconButton icon={<Icon as={FaShoppingCart} width="5" height="5" />} aria-label={''} />
     </Box>
   );
 };
 
-export default ShoppingCard;
+export default ShoppingCart;

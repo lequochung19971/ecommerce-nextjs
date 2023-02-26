@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,6 +14,7 @@
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "axios": "^1.2.2",
+    "chakra-react-select": "^4.4.3",
     "framer-motion": "^6.5.1",
     "i": "^0.3.7",
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}' --quiet --fix",
@@ -21,15 +22,18 @@
     "next": "13.1.1",
     "next-auth": "^4.18.7",
     "npm": "^9.3.1",
+    "qs": "^6.11.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.42.0",
     "react-icons": "^4.7.1",
-    "react-image-gallery": "^1.2.11"
+    "react-image-gallery": "^1.2.11",
+    "swr": "^2.0.3"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.1.2",
     "@types/node": "18.11.18",
+    "@types/qs": "^6.9.7",
     "@types/react": "18.0.26",
     "@types/react-dom": "18.0.10",
     "@types/react-image-gallery": "^1.2.0",

@@ -3,7 +3,6 @@ import type { GetServerSideProps } from 'next';
 
 import { withAuth } from '@/common/HOCs';
 import { Banner } from '@/modules/home/components';
-import { ProductCard } from '@/modules/products/components';
 
 export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
   return {
@@ -13,9 +12,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
 
 const Home: React.FunctionComponent = () => {
   return (
-    <Box w="100%" height="100%" bg="gray.200">
+    <Box w="100%" height="100%">
       <Banner />
-      <ProductCard />
     </Box>
   );
 };

@@ -1,5 +1,5 @@
-import NextAuth, { AuthOptions as OriginalAuthOptions, CallbacksOptions, DefaultUser, User } from 'next-auth';
-import { DefaultJWT, JWT } from 'next-auth/jwt';
+import type { DefaultUser} from 'next-auth';
+import type { DefaultJWT, JWT } from 'next-auth/jwt';
 
 declare module 'next-auth/jwt' {
   /**
